@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
-
 import supabase from "@/utils/supbaseClient";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-
 import MemberTable from "@/components/MemberTable";
 import Member from "@/components/Member";
-
 import ModalComponent from "@/components/ModalComponent";
 
 function Members() {
