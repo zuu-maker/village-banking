@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import supabase from "@/utils/supbaseClient";
-import Header from "@/components/Header";
+import Header from "@/components/HeaderComponent";
 import Sidebar from "@/components/Sidebar";
 
 import TransactionsTable from "@/components/TransactionsTable";

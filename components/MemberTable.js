@@ -4,11 +4,10 @@ import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import supabase from "@/utils/supbaseClient";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -138,18 +137,16 @@ function MemberTable({ rows = [], getMembers, setOpen, setCurrent }) {
                       );
                     })}
                     <StyledTableCell key="edit" align="right">
-                      {/* <EditIcon
+                      <EditIcon
                         onClick={() => handleOpen(row)}
                         className="hover:cursor-pointer hover:scale-105 hover:text-green-500"
-                      /> */}
-                      edit
+                      />
                     </StyledTableCell>
                     <StyledTableCell key="delete" align="right">
-                      {/* <DeleteIcon
+                      <DeleteIcon
                         onClick={() => handleDelete(row.id)}
                         className="hover:cursor-pointer hover:scale-105 hover:text-red-500 "
-                      /> */}
-                      delete
+                      />
                     </StyledTableCell>
                   </StyledTableRow>
                 );
