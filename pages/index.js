@@ -1,118 +1,185 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { useState, useEffect } from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Container from "@mui/material/Container";
 
-const inter = Inter({ subsets: ['latin'] })
+import supabase from "@/utils/supbaseClient";
+import Header from "@/components/header";
+import Sidebar from "@/components/Sidebar";
+import { Box } from "@mui/material";
+import MainTable from "@/components/MainTable";
+import Transaction from "@/components/Transaction";
+import TransactionsTable from "@/components/TransactionsTable";
+
+function createData(name, code, population, size) {
+  const density = population / size;
+  return { name, code, population, size, density };
+}
+
+const months = [
+  {
+    index: 0,
+    name: "jan",
+  },
+  {
+    index: 1,
+    name: "feb",
+  },
+  {
+    index: 2,
+    name: "mar",
+  },
+  {
+    index: 3,
+    name: "apr",
+  },
+  {
+    index: 4,
+    name: "may",
+  },
+  {
+    index: 5,
+    name: "jun",
+  },
+  {
+    index: 6,
+    name: "jul",
+  },
+  {
+    index: 7,
+    name: "aug",
+  },
+  {
+    index: 8,
+    name: "sept",
+  },
+  {
+    index: 9,
+    name: "oct",
+  },
+  {
+    index: 10,
+    name: "nov",
+  },
+  {
+    index: 11,
+    name: "dec",
+  },
+];
+
+// const rows = [
+//   createData("India", "IN", 1324171354, 3287263),
+//   createData("China", "CN", 1403500365, 9596961),
+//   createData("Italy", "IT", 60483973, 301340),
+//   createData("United States", "US", 327167434, 9833520),
+//   createData("Canada", "CA", 37602103, 9984670),
+//   createData("Australia", "AU", 25475400, 7692024),
+//   createData("Germany", "DE", 83019200, 357578),
+//   createData("Ireland", "IE", 4857000, 70273),
+//   createData("Mexico", "MX", 126577691, 1972550),
+//   createData("Japan", "JP", 126317000, 377973),
+//   createData("France", "FR", 67022000, 640679),
+//   createData("United Kingdom", "GB", 67545757, 242495),
+//   createData("Russia", "RU", 146793744, 17098246),
+//   createData("Nigeria", "NG", 200962417, 923768),
+//   createData("Brazil", "BR", 210147125, 8515767),
+// ];
 
 export default function Home() {
+  // const [people, setPeople] = useState([]);
+  const [rows, setRows] = useState([]);
+
+  // useEffect(() => {
+  //   getMembers();
+  // }, []);
+
+  useEffect(() => {
+    getTransactions();
+  }, []);
+
+  // async function getMembers() {
+  //   let _rows = [];
+  //   let row = {};
+  //   const { data, error } = await supabase.from("members").select(`
+  //     name,
+  //     balance,
+  //     transactions (
+  //       amount,
+  //       month
+  //     )
+  //   `);
+
+  //   data.forEach((item) => {
+  //     months.forEach((month) => {
+  //       let sum = 0;
+  //       item.transactions.forEach((transc) => {
+  //         if (transc.month === month.index) {
+  //           sum += transc.amount;
+  //         }
+  //       });
+  //       row[month.name] = sum;
+  //     });
+  //     row["name"] = item.name;
+  //     _rows.push(row);
+  //   });
+  //   console.log("rows maybe? ->", _rows);
+  //   setRows(_rows);
+  //   setPeople(data);
+  // }
+
+  async function getTransactions() {
+    let _rows = [];
+    let row = {};
+    const { data, error } = await supabase
+      .from("transactions")
+      .select(
+        `
+            amount,
+            month,
+            transaction_type,
+            members(
+                name
+            )
+          `
+      )
+      .order("id", { ascending: false })
+      .limit(10);
+
+    data.forEach((item) => {
+      row["member"] = item.members.name;
+      row["transactionType"] = item.transaction_type;
+      row["amount"] = item.amount;
+      console.log(item.amount);
+      months.forEach((month) => {
+        if (month.index === item.month) {
+          row["month"] = month.name;
+        }
+      });
+      let rowItem = structuredClone(row);
+      _rows.push(rowItem);
+      console.log(row);
+    });
+
+    console.log("rows maybe? ->", _rows);
+    setRows(_rows);
+  }
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <Paper className="min-h-screen" sx={{ width: "100%", overflow: "hidden" }}>
+      <Header />
+      <div className=" min-w-screen flex">
+        <Sidebar />
+        <div className="w-full">
+          <Transaction getTransactions={getTransactions} />
+          <TransactionsTable rows={rows} />
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </Paper>
+  );
 }
