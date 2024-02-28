@@ -10,7 +10,7 @@ import TableRow from "@mui/material/TableRow";
 import Container from "@mui/material/Container";
 
 import supabase from "@/utils/supbaseClient";
-import Header from "@/components/header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Box } from "@mui/material";
 import MainTable from "@/components/MainTable";

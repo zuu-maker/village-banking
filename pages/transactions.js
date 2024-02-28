@@ -1,19 +1,9 @@
 import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Container from "@mui/material/Container";
-
 import supabase from "@/utils/supbaseClient";
-import Header from "@/components/header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import { Box } from "@mui/material";
-import MainTable from "@/components/MainTable";
+
 import TransactionsTable from "@/components/TransactionsTable";
 
 const interestRate = 0.05;
@@ -121,7 +111,6 @@ function Transactions() {
         <Sidebar />
         <TransactionsTable rows={rows} />
       </div>
-      {JSON.stringify(people)}
     </Paper>
   );
 }

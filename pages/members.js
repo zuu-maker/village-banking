@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 
 import supabase from "@/utils/supbaseClient";
-import Header from "@/components/header";
+import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 
 import MemberTable from "@/components/MemberTable";
@@ -10,7 +10,7 @@ import Member from "@/components/Member";
 
 import ModalComponent from "@/components/ModalComponent";
 
-function members() {
+function Members() {
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState({});
@@ -92,4 +92,4 @@ function members() {
   );
 }
 
-export default members;
+export default Members;
