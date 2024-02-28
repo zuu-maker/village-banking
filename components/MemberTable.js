@@ -65,14 +65,14 @@ function MemberTable({ rows = [], getMembers, setOpen, setCurrent }) {
     setOpen(true);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  // const handleChangePage = (event, newPage) => {
+  //   setPage(newPage);
+  // };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(+event.target.value);
+  //   setPage(0);
+  // };
 
   const handleDelete = async (id) => {
     const { error } = await supabase.from("members").delete().eq("id", id);
@@ -155,7 +155,7 @@ function MemberTable({ rows = [], getMembers, setOpen, setCurrent }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      {/* <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
         count={rows.length}
@@ -163,7 +163,7 @@ function MemberTable({ rows = [], getMembers, setOpen, setCurrent }) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      /> */}
     </div>
   );
 }
